@@ -47,6 +47,8 @@ namespace ScpiLib
             return strBud.ToString();
         }
 
+
+
         private static void AppendSimpleCharEnter(ref StringBuilder strBuild)
         {
             strBuild.Append("\r\n");
