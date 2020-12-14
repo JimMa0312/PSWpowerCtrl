@@ -38,13 +38,8 @@ namespace ScpiLib
         /// 查询输出的
         /// </summary>
         /// <returns></returns>
-        string MeasureCurrent();
-
-        /// <summary>
-        /// 根据控制指令，生成查询指令
-        /// </summary>
-        /// <param name="setCmd"></param>
-        /// <returns></returns>
-        string Query(string setCmd);
+        string QueryMeasureCurrent();
+        string QueryMeasureVoltage();
+        string QueryMeasurePower();
     }
 }
