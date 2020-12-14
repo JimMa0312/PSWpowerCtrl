@@ -9,6 +9,13 @@ namespace ScpiLib
         Transient,
         Output
     }
+
+    public enum SwitchType
+    {
+        OFF,
+        ON
+    }
+
     /// <summary>
     /// 用来描述SCPI标准指令接口
     /// </summary>
@@ -41,5 +48,9 @@ namespace ScpiLib
         string QueryMeasureCurrent();
         string QueryMeasureVoltage();
         string QueryMeasurePower();
+        string OutputDelayOnSecond(double second=0);
+        string OutputDelayOffSecond(double second = 0);
+        string OutputCmd(SwitchType switchType);
+
     }
 }
