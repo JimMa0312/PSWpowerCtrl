@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ScpiLib
+namespace ScpiLib.Command
 {
     public interface IAppendExecChar
     {

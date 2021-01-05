@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ScpiLib
+namespace ScpiLib.Command
 {
     public enum TriggerType
     {
@@ -51,6 +51,6 @@ namespace ScpiLib
         string OutputDelayOnSecond(double second=0);
         string OutputDelayOffSecond(double second = 0);
         string OutputCmd(SwitchType switchType);
-
+        string SystemError();
     }
 }
