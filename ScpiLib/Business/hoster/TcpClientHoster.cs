@@ -11,7 +11,7 @@ namespace ScpiLib.Business.hoster
 
         private TcpClient _tcpClient;
         private NetworkStream _networksStream;
-        private List<byte[]> _responseByte;
+        private Queue<byte[]> _responseByte;
 
         private string _targetIp;
         private int _targetPort;
@@ -27,7 +27,7 @@ namespace ScpiLib.Business.hoster
         {
             _tcpClient = new TcpClient();
             _isConnect = false;
-            _responseByte = new List<byte[]>();
+            _responseByte = new Queue<byte[]>();
         }
 
 
@@ -53,7 +53,23 @@ namespace ScpiLib.Business.hoster
 
         public int sendData(List<byte> buffer)
         {
-            throw new NotImplementedException();
+            int result = 0;
+            try
+            {
+                if(_networksStream.CanWrite && buffer!=null && buffer.Count>0)
+                {
+                    _networksStream.Write(buffer.ToArray(), 0, buffer.Count);
+                    _networksStream.Flush();
+                    result = buffer.Count;
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -100,7 +116,7 @@ namespace ScpiLib.Business.hoster
             try
             {
                 int num = _networksStream.EndRead(ar);
-                _responseByte.Add(currentByte);
+                _responseByte.Enqueue(currentByte);
 
                 byte[] NewBytes = new byte[1024];
                 _networksStream.BeginRead(NewBytes, 0, NewBytes.Length, new AsyncCallback(AsynReceiveData), NewBytes);
