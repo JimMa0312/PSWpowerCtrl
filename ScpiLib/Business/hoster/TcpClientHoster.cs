@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ScpiLib.Business.hoster
 {
@@ -30,20 +31,31 @@ namespace ScpiLib.Business.hoster
             _responseByte = new Queue<byte[]>();
         }
 
-
-        public bool connect()
+        public void connect()
         {
-            throw new NotImplementedException();
+            try
+            {
+                ConnectToServerAsync();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                disconnect();
+            }
+            
         }
 
-        public bool disconnect()
+        public void disconnect()
         {
-            throw new NotImplementedException();
+            _tcpClient.Close();
+
+            _isConnect = false;
         }
 
         public bool getIsConnect()
         {
-            throw new NotImplementedException();
+            return _isConnect;
         }
 
         public int recvData(out List<byte> buffer)
@@ -53,16 +65,25 @@ namespace ScpiLib.Business.hoster
 
         public int sendData(List<byte> buffer)
         {
+            int result= sendDataAsync(buffer).Result;
+
+            return result;
+        }
+
+        private async Task<int> sendDataAsync(List<byte> buffer)
+        {
             int result = 0;
             try
             {
-                if(_networksStream.CanWrite && buffer!=null && buffer.Count>0)
+                if (_networksStream != null && _tcpClient.Connected == true)
                 {
-                    _networksStream.Write(buffer.ToArray(), 0, buffer.Count);
-                    _networksStream.Flush();
-                    result = buffer.Count;
+                    if (_networksStream.CanWrite && buffer != null && buffer.Count > 0)
+                    {
+                        await _networksStream.WriteAsync(buffer.ToArray(), 0, buffer.Count);
+                        await _networksStream.FlushAsync();
+                        result = buffer.Count;
+                    }
                 }
-
                 return result;
             }
             catch (Exception ex)
@@ -75,16 +96,32 @@ namespace ScpiLib.Business.hoster
         /// <summary>
         /// 根据服务器Ip地址和服务器活动端口，通过TCP与服务器建立通信链路。
         /// </summary>
-        public void connectToServer()
+        private async void ConnectToServerAsync()
         {
             try
             {
                 //开始异步连接服务器
-                _tcpClient.BeginConnect(_targetIp, _targetPort, new AsyncCallback(AsynConnect), _tcpClient);
+                //_tcpClient.BeginConnect(_targetIp, _targetPort, new AsyncCallback(AsynConnect), _tcpClient);
+                var task = _tcpClient.ConnectAsync(_targetIp, _targetPort);
+
+                await Task.WhenAny(task, Task.Delay(2000));
+
+                if(!task.IsCompleted || task.IsFaulted)
+                {
+                    //TODO 设置连接错误
+                    throw new Exception($"远程设别{_targetIp} 连接超时");
+                    
+                }
+                else if(_tcpClient.Connected)
+                {
+                    //TCP握手成功
+                    _isConnect = true;
+                    _networksStream = _tcpClient.GetStream();
+                }
             }
             catch (Exception ex)
             {
-
+                _isConnect = false;
                 throw;
             }
         }

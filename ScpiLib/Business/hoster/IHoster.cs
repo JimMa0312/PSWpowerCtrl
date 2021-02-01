@@ -6,8 +6,8 @@ namespace ScpiLib.Business.hoster
 {
     public interface IHoster
     {
-        bool connect();
-        bool disconnect();
+        void connect();
+        void disconnect();
 
         int sendData(List<byte> buffer);
         int recvData(out List<byte> buffer);
