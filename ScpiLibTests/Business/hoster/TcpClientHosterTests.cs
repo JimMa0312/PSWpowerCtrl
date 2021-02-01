@@ -14,7 +14,7 @@ namespace ScpiLib.Business.hoster.Tests
         [TestInitialize]
         public void configTest()
         {
-            tcpClientHoster = new TcpClientHoster("193.1.105.115", 2268);
+            tcpClientHoster = new TcpClientHoster("192.168.0.101", 2268);
             tcpClientHoster.connect();
 
         }
@@ -29,9 +29,7 @@ namespace ScpiLib.Business.hoster.Tests
         {
             string command = "OUTPut:STATe:IMMediate 1\r\n";
             List<byte> buffer = new List<byte>(Encoding.ASCII.GetBytes(command));
-            int result= tcpClientHoster.sendData(buffer);
-
-            Console.WriteLine($"{result}");
+            tcpClientHoster.sendData(buffer);
         }
 
         [TestCleanup]

@@ -9,7 +9,7 @@ namespace ScpiLib.Business.hoster
         void connect();
         void disconnect();
 
-        int sendData(List<byte> buffer);
+        void sendData(List<byte> buffer);
         int recvData(out List<byte> buffer);
     }
 }
