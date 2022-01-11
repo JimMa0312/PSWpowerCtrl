@@ -63,16 +63,13 @@ namespace ScpiLib.Business.hoster
             throw new NotImplementedException();
         }
 
-        public int sendData(List<byte> buffer)
+        public void sendData(List<byte> buffer)
         {
-            int result= sendDataAsync(buffer).Result;
-
-            return result;
+            sendDataAsync(buffer);
         }
 
-        private async Task<int> sendDataAsync(List<byte> buffer)
+        private async void sendDataAsync(List<byte> buffer)
         {
-            int result = 0;
             try
             {
                 if (_networksStream != null && _tcpClient.Connected == true)
@@ -81,10 +78,12 @@ namespace ScpiLib.Business.hoster
                     {
                         await _networksStream.WriteAsync(buffer.ToArray(), 0, buffer.Count);
                         await _networksStream.FlushAsync();
-                        result = buffer.Count;
                     }
                 }
-                return result;
+                else
+                {
+                    throw new Exception("TCP连接未准备好");
+                }
             }
             catch (Exception ex)
             {
@@ -122,7 +121,7 @@ namespace ScpiLib.Business.hoster
             catch (Exception ex)
             {
                 _isConnect = false;
-                throw;
+                Console.WriteLine(ex.Message);
             }
         }
 
