@@ -24,8 +24,7 @@ namespace ScpiLib.Command
             //首先处理第一条指令
             if(stringBuilder.Length==0 && cmdset.Length>0)
             {
-                stringBuilder.Append(cmdset[index].GetDisplayName());
-                index++;
+                stringBuilder.Append(cmdset[index].GetDisplayName().ToLower());
             }
 
             //处理剩下的指令
@@ -33,7 +32,7 @@ namespace ScpiLib.Command
             {
                 if(cmdset[index].IsSquareBracketItem()==false)
                 {
-                    stringBuilder.Append(':').Append(cmdset[index]);
+                    stringBuilder.Append(':').Append(cmdset[index].GetDisplayName().ToLower());
                 }
             }
         }

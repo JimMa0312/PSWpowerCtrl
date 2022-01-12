@@ -9,23 +9,22 @@ namespace ScpiLib.Command
         /// 程控终止远端任何活动
         /// </summary>
         /// <returns></returns>
-        public string ABORt()
+        public string Abort()
         {
             ScpiCmdBuilder.AppendCmdInMessage(ref strBuilder, EScpiCmd.Abort);
             return ScpiCmdBuilder.ToCmdMsg(strBuilder);
         }
-
         /// <summary>
         /// 设置电压和电流值
         /// </summary>
         /// <param name="voltage">电压值</param>
         /// <param name="current">电流值（可缺省）</param>
         /// <returns>设置电压和电流的指令快</returns>
-        public string APPLy(double voltage, double current = -1)
+        public string Apply(double voltage, double current = -1)
         {
             if(voltage < 0)
             {
-                throw new ApplicationException("Param [Voltage] out of range!");
+                throw new ArgumentOutOfRangeException("Param [Voltage] out of range!");
             }
             ScpiCmdBuilder.AppendCmdInMessage(ref strBuilder, EScpiCmd.Apply);
             if (current > -1)
@@ -38,12 +37,11 @@ namespace ScpiLib.Command
             }
             else
             {
-                throw new ApplicationException("Param [Current] out of range!");
+                throw new ArgumentOutOfRangeException("Param [Current] out of range!");
             }
 
             return ScpiCmdBuilder.ToCmdMsg(strBuilder);
         }
-
         public string Initiate(TriggerType triggerType)
         {
             throw new NotImplementedException();
@@ -67,6 +65,10 @@ namespace ScpiLib.Command
         /// <returns>电源延时停止输出指令</returns>
         public string OutputDelayOffSecond(double second = 0)
         {
+            if(second<0 || second>99.99)
+            {
+                throw new ArgumentOutOfRangeException($"param second[{second}] out of Range");
+            }
             ScpiCmdBuilder.AppendCmdInMessage(ref strBuilder, EScpiCmd.Output, EScpiCmd.Delay, EScpiCmd.Off);
             ScpiCmdBuilder.AppendParamsInMessage(ref strBuilder, second);
 
@@ -79,6 +81,10 @@ namespace ScpiLib.Command
         /// <returns>电源延时开始输出指令</returns>
         public string OutputDelayOnSecond(double second = 0)
         {
+            if (second < 0 || second > 99.99)
+            {
+                throw new ArgumentOutOfRangeException($"param second[{second}] out of Range");
+            }
             ScpiCmdBuilder.AppendCmdInMessage(ref strBuilder, EScpiCmd.Output, EScpiCmd.Delay, EScpiCmd.On);
             ScpiCmdBuilder.AppendParamsInMessage(ref strBuilder, second);
 

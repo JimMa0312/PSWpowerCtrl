@@ -25,14 +25,14 @@ namespace ScpiLib.Command
         /// ABORt 指令 清除所有的触发方式
         /// </summary>
         /// <returns>返回组成ABORt指令的字符串</returns>
-        string ABORt();
+        string Abort();
         /// <summary>
         /// 用于设置电源的输出最大电压和输出最大电流
         /// </summary>
         /// <param name="voltage">设备允许额定电压的0%~105%值</param>
         /// <param name="current">设备允许额定电流的0%~105%值，该值默认为复数</param>
         /// <returns>组织成Apply的值</returns>
-        string APPLy(double voltage, double current=-1);
+        string Apply(double voltage, double current=-1);
 
         /// <summary>
         /// 用于设置出发方式
